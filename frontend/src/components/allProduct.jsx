@@ -2,7 +2,7 @@ import SingleProduct from "./singleProduct";
 const AllProducts = () => {
   return (
     <>
-      <div className="container">
+      <div>
         {/*Latest Product*/}
         <h3 className=" mb-4 mt-4">All Products </h3>
         

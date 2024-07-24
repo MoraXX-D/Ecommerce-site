@@ -11,7 +11,7 @@ const Home = () => {
 
 
         <main className="mt-4 ">
-            <div className="container">
+            <div>
                 {/*Latest Product*/}
                 <h3 className="mb-5">New Arivals <Link to="products" className="float-end btn  btn-secondary mt-2">View All Products <i className="fa-solid fa-arrow-right-long"></i></Link> </h3>
                 <div className="row mb-4">

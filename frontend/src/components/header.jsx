@@ -23,6 +23,9 @@ const Header = () => {
             <li className="nav-item">
               <Link className="nav-link " aria-disabled="true" to="checkout">My Cart(4)</Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link " aria-disabled="true" to="checkout">New Orders(9)</Link>
+            </li>
             <li className="nav-item dropdown">
               <Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Account
@@ -31,6 +34,18 @@ const Header = () => {
                 <li><Link className="dropdown-item" to="customer/dashboard">Dashboard</Link></li>
                 <li><Link className="dropdown-item" to="customer/login">Login</Link></li>
                 <li><Link className="dropdown-item" to="customer/register">Register</Link></li>
+                <li><hr className="dropdown-divider"/></li>
+                <li><Link className="dropdown-item" to="#">Log Out</Link></li>
+              </ul>
+            </li>
+            <li className="nav-item dropdown">
+              <Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Seller Panel
+              </Link>
+              <ul className="dropdown-menu">
+                <li><Link className="dropdown-item" to="/seller/dashboard">Dashboard</Link></li>
+                <li><Link className="dropdown-item" to="/seller/login">Login</Link></li>
+                <li><Link className="dropdown-item" to="/seller/register">Register</Link></li>
                 <li><hr className="dropdown-divider"/></li>
                 <li><Link className="dropdown-item" to="#">Log Out</Link></li>
               </ul>

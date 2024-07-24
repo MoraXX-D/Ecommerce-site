@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const Categories = () => {
     return (
-        <div className="container">
+        <div>
             {/*Popular categories */}
             <h3 className="mb-5">Polular Categories <a href="#" className="float-end btn  btn-secondary mt-2">View All Categories<i className="fa-solid fa-arrow-right-long"></i></a> </h3>
             <div className="row">

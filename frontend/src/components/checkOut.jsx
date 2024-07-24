@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import '../index.css'
 
 
+
 const CheckOut = (props) => {
     return (
         <div className="table-responsive">

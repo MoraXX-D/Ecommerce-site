@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
-import Sidebar from "./sidebar";
+import SellerSidebar from "./seller_sidebar";
 
-const Dashboard = () => {
+const SellerDashboard = () => {
     return (
         <div className="container mt-4">
             <div className="row">
-                <Sidebar/>
+                <SellerSidebar/>
                 <div className="col-md-9 col-12 mb-2">
                         <div className="row">
                             <div className="col-md-4 mb-2">
                                 <div className="card">
                                     <div className="card-body text-center">
-                                        <h4>Total Orders</h4>
+                                        <h4>Total Products</h4>
                                         <h4><a href="#">123</a></h4>
                                     </div>
                                 </div>
@@ -20,7 +20,7 @@ const Dashboard = () => {
                             <div className="col-md-4 mb-2">
                                 <div className="card">
                                     <div className="card-body text-center">
-                                        <h4>Wishlist</h4>
+                                        <h4>Total Order</h4>
                                         <h4><a href="#">123</a></h4>
                                     </div>
                                 </div>
@@ -29,7 +29,7 @@ const Dashboard = () => {
                             <div className="col-md-4 mb-2">
                                 <div className="card">
                                     <div className="card-body text-center">
-                                        <h4>Addresses</h4>
+                                        <h4>Total customer</h4>
                                         <h4><a href="#">5</a></h4>
                                     </div>
                                 </div>
@@ -43,4 +43,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default SellerDashboard;
