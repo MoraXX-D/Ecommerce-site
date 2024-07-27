@@ -115,3 +115,5 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(CategoryDetailSerializer, self).__init__(*args, **kwargs)
         self.Meta.depth = 1
+
+

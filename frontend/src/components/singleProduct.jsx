@@ -10,8 +10,8 @@ const SingleProduct = (props) => {
                 <div className="card shadow">
                     <Link to="/product/poster-xiao/123"><img src={xiao} className="card-img-top" alt="..." /></Link>
                     <div className="card-body">
-                        <h4 className="card-title">{props.title}</h4>
-                        <h6 className="card-title text-muted" >Price: <span>Rs. 500</span></h6>
+                        <h4 className="card-title">{props.product.title}</h4>
+                        <h6 className="card-title text-muted" >Price: <span>Rs. {props.product.price}</span></h6>
                     </div>
                     <div className="card-footer d-flex justify-content-between ">
                         <button title='Add to cart' className="btn btn-secondary btn-sm"><i className="fa-solid fa-cart-plus fa-cart-plus"></i></button>

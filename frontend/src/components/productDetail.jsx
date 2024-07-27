@@ -1,9 +1,33 @@
 import xiao from '../assets/xiao.jpg'
 import { Link } from 'react-router-dom'
 import SingleProduct from './singleProduct'
+import { useEffect, useState } from 'react'
 
 
-const ProductDetail = () => {
+const ProductDetail = (props) => {
+
+    const [Products, setProducts] = useState([]);
+    const[totalResult,setTotalResult] = useState(0);
+
+    useEffect(() => {
+        async function getData() {
+            const url = "http://127.0.0.1:8000/api/products/";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+                const json = await response.json();
+                setProducts(json.data);
+                setTotalResult(json.count)
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+
+        getData();
+    },[]);
+
     return (
         <>
             <section className="container mt-4">
@@ -29,7 +53,7 @@ const ProductDetail = () => {
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Tshirt</Link>
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Bandana</Link>
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Bottle</Link>
-                                <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Russian</Link>
+                                <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Smart Phone</Link>
                             </p>
                         </div>
                     </div>
@@ -48,23 +72,23 @@ const ProductDetail = () => {
                         <div className="carousel-inner">
                             <div className="carousel-item active">
                                 <div className="row mb-5">
-                                    <SingleProduct />
-                                    <SingleProduct />
-                                    <SingleProduct />
+                                    {
+                                        Products.map((product) => <SingleProduct product={product} />)
+                                    }
                                 </div>
                             </div>
                             <div className="carousel-item mb-5">
                                 <div className="row">
-                                    <SingleProduct />
-                                    <SingleProduct />
-                                    <SingleProduct />
+                                    {
+                                        Products.map((product) => <SingleProduct product={product} />)
+                                    }
                                 </div>
                             </div>
                             <div className="carousel-item mb-5">
                                 <div className="row">
-                                    <SingleProduct />
-                                    <SingleProduct />
-                                    <SingleProduct />
+                                    {
+                                        Products.map((product) => <SingleProduct product={product} />)
+                                    }
                                 </div>
                             </div>
                         </div>

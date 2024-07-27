@@ -4,23 +4,46 @@ import xiao from '../assets/xiao.jpg'
 import AllProducts from './allProduct';
 import SingleProduct from './singleProduct';
 import {} from './allProduct'
+import { useEffect, useState } from "react";
 
 
 const Home = () => {
+    const products = [
+        {
+            'title' : 'H&M Hoodie',
+            'price' : '799'
+        },
+        {
+            'title' : 'Samsung Z-fold 6',
+            'price' : '1,65,999'
+        },
+        {
+            'title' : 'Vase',
+            'price' : '1799'
+        },
+        {
+            'title' : 'Nike Air Jordan Dior',
+            'price' : '13,99,999'
+        },
+        {
+            'title' : 'Samsung Galaxy tab s9',
+            'price' : '55,999'
+        },
+        {
+            'title' : 'Samsung Galaxy Book 4 Edge',
+            'price' : '1,29,000'
+        }
+    ]
     return (
-
 
         <main className="mt-4 ">
             <div>
                 {/*Latest Product*/}
                 <h3 className="mb-5">New Arivals <Link to="products" className="float-end btn  btn-secondary mt-2">View All Products <i className="fa-solid fa-arrow-right-long"></i></Link> </h3>
                 <div className="row mb-4">
-                <SingleProduct/>
-                <SingleProduct/>
-                <SingleProduct/>
-                <SingleProduct/>
-                <SingleProduct/>
-                <SingleProduct/>
+                {
+                    products.map((product) => <SingleProduct product={product} />)
+                }
                 </div>
                 {/*End latest Product */}
 
@@ -222,8 +245,7 @@ const Home = () => {
 
 
                 </div>
-                {/*End
-         Popular categories*/}
+                {/*End Popular categories*/}
 
                 {/*Rating and reviews */}
 
