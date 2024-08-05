@@ -1,0 +1,9 @@
+# React
+Context API - It helps you to not pass the data from parent to child and then child to child manually. if you wrap the parent in context API then it will pass the parent to all the child.
+
+
+
+
+
+# Django
+* from django.db import IntegrityError :- if any kind of dublicacy error happened it is used for handeling

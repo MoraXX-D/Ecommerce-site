@@ -8,9 +8,11 @@ const SingleProduct = (props) => {
         <>
             <div className="col-12 col-md-4 mb-4 d-flex">
                 <div className="card shadow">
-                    <Link to="/product/poster-xiao/123"><img src={xiao} className="card-img-top" alt="..." /></Link>
+                    <Link to={`/product/${props.product.title}/${props.product.id}`}>
+                    <img src={props.product.image} className="card-img-top" alt="..." />
+                    </Link>
                     <div className="card-body">
-                        <h4 className="card-title">{props.product.title}</h4>
+                        <h4 className="card-title"><Link to={`/product/${props.product.title}/${props.product.id}`}>{props.product.title}</Link></h4>
                         <h6 className="card-title text-muted" >Price: <span>Rs. {props.product.price}</span></h6>
                     </div>
                     <div className="card-footer d-flex justify-content-between ">

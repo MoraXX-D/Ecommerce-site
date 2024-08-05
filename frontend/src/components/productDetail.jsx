@@ -1,50 +1,172 @@
-import xiao from '../assets/xiao.jpg'
-import { Link } from 'react-router-dom'
-import SingleProduct from './singleProduct'
-import { useEffect, useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import SingleRelatedProduct from './singleRelatedProduct'
+import { UserContext, CartContext } from '../context'
+
+import '../App.css'
 
 
-const ProductDetail = (props) => {
+const ProductDetail = () => {
+    const baseUrl = "http://127.0.0.1:8000/api";
+    const [productData, setProductData] = useState([]);
+    const [productImgs, setProductImgs] = useState([]);
+    const [relatedProducts, setRelatedProducts] = useState([]);
+    const [cartButtonClickStatus, setCartButtonClickStatus] = useState(false);
+    const { cartData, setCartData } = useContext(CartContext)
 
-    const [Products, setProducts] = useState([]);
-    const[totalResult,setTotalResult] = useState(0);
+    let { product_id } = useParams()
 
-    useEffect(() => {
-        async function getData() {
-            const url = "http://127.0.0.1:8000/api/products/";
-            try {
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
+    function checkProductInCart(product_id) {
+        let previousCart = localStorage.getItem('cartData')
+        let cartJson = JSON.parse(previousCart)
+        if (cartJson != null) {
+            cartJson.map((cart) => {
+                if (cart != null && cart.product.id == product_id) {
+                    setCartButtonClickStatus(true)
                 }
-                const json = await response.json();
-                setProducts(json.data);
-                setTotalResult(json.count)
-            } catch (error) {
-                console.error(error.message);
+            })
+        }
+    }
+
+
+    const getData = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            setProductData(json);
+            setProductImgs(json.product_imgs)
+            // Use 'json.results' to correctly fetch paginated data
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+
+    const getRelatedData = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            const json = await response.json();
+            setRelatedProducts(json.results)
+            // Use 'json.results' to correctly fetch paginated data
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+
+    // Fetch data once when the component mounts
+    useEffect(() => {
+        getData(baseUrl + '/product/' + product_id);
+        getRelatedData(baseUrl + '/related-product/' + product_id)
+        checkProductInCart(product_id)
+    }, []);
+
+    const cartAddButtonHandler = () => {
+        let previousCartData = localStorage.getItem('cartData')
+        let cartJson = JSON.parse(previousCartData)
+
+        // if (!Array.isArray(cartJson)) {
+        //     cartJson = [];
+        // }
+
+        const cartData = {
+            'product': {
+                'id': productData.id,
+                'title': productData.title
+            },
+            'user': {
+                'id': 1
             }
         }
+        if (cartJson != null) {
+            cartJson.push(cartData)
+            let cartString = JSON.stringify(cartJson)
+            localStorage.setItem('cartData', cartString)
+            setCartData(cartJson)
+        }
+        else {
+            let newCartList = []
+            newCartList.push(cartData)
+            let cartString = JSON.stringify(newCartList)
+            localStorage.setItem('cartData', cartString)
+        }
+        setCartButtonClickStatus(true)
+    }
 
-        getData();
-    },[]);
+    const cartRemoveButtonHandler = () => {
+        let previousCart = localStorage.getItem('cartData')
+        let cartJson = JSON.parse(previousCart)
+        cartJson.map((cart, index) => {
+            if (cart != null && cart.product.id == productData.id) {
+                // delete cartJson[index]
+                cartJson.splice(index, 1)
+            }
+        })
+        let cartString = JSON.stringify(cartJson)
+        localStorage.setItem('cartData', cartString);
+        setCartButtonClickStatus(false)
+        setCartData(cartJson)
+    }
+
+    // {/* Map through the productImgs array to display each image */ }
+    // {
+    //     productImgs.map((img, index) => (
+    //         <img key={index} src={img.image} className="img-thumbnail" alt={`Product image ${index}`} />
+    //     ))
+    // }
 
     return (
         <>
             <section className="container mt-4">
                 <div className="row">
                     <div className="col-4">
-                        <img src={xiao} className="img-thumbnail" alt="" />
+                        <div id="carouselExampleFade" className="carousel slide carousel-fade">
+                            <div className="carousel-inner">
+                                {productImgs.map((img, index) => (
+                                    <div className={`carousel-item ${index === 0 ? 'active' : ''}`} key={index}>
+                                        <img src={img.image} className="d-block w-100" alt={`Product image ${index}`} />
+                                    </div>
+                                ))}
+                            </div>
+                            <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                                <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span className="visually-hidden">Previous</span>
+                            </button>
+                            <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                                <span className="carousel-control-next-icon " aria-hidden="true"></span>
+                                <span className="visually-hidden">Next</span>
+                            </button>
+                        </div>
                     </div>
                     <div className="col-8">
-                        <h3>Xiao Poster</h3>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloribus expedita officia, illum libero quo similique est, saepe repudiandae esse minus quia soluta, maxime facere consequatur! Error ipsam ea dignissimos similique.</p>
-                        <h5 className="card-title">Price: 500</h5>
+                        <h3>{productData.title}</h3>
+                        <p>{productData.details}</p>
+                        <h5 className="card-title">Price: {productData.price}</h5>
                         <p className="mt-3  ">
-                            <button title='Add to cart' className=" btn btn-secondary me-5"><i className="fa-solid fa-cart-plus fa-cart-plus me-2"></i>Add to Cart</button>
+                            {!cartButtonClickStatus &&
+                                <button title='Add to cart' className=" btn btn-secondary me-5" type='button' onClick={cartAddButtonHandler}>
+                                    <i className="fa-solid fa-cart-plus fa-cart-plus me-2">
+                                    </i>
+                                    Add to Cart
+                                </button>
+                            }
+                            {cartButtonClickStatus &&
+                                <button title='Remove from cart' className=" btn btn-warning me-5" type='button' onClick={cartRemoveButtonHandler}>
+                                    <i className="fa-solid fa-cart-plus fa-cart-plus me-2">
+                                    </i>
+                                    Remove from cart
+                                </button>
+                            }
+
                             <button title='Buy Now' className=" btn btn-primary  me-5"><i className="fa fa-cart-plus fa-bag-shopping  me-2"></i>Buy Now</button>
                             <button title='Add to wishlist' className=" btn btn-dark  me-5"><i className="fa fa-cart-plus fa-heart me-2"></i>Add to Wishlist</button>
                         </p>
-                        <div className="producttags mt-3">
+                        {/* <div className="product-tags mt-3">
                             <hr />
                             <h5 className="mt-3">Tags</h5>
                             <p>
@@ -53,55 +175,14 @@ const ProductDetail = (props) => {
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Tshirt</Link>
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Bandana</Link>
                                 <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Bottle</Link>
-                                <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Smart Phone</Link>
+                                <Link to="#" className='badge bg-primary text-white me-1 text-decoration-none'>Russian</Link>
                             </p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
                 {/* Related Product */}
-                <div>
-                    <h3 className="mt-5 mb-3">Related Products</h3>
-                    <div id="relatedProductSlider" className="carousel slide carousel-dark bg-light  mt-4">
-                        <div className="carousel-indicators ">
-                            <button type="button" data-bs-target="#relatedProductSlider" data-bs-slide-to="0" className="active bg-dark border rounded wid" aria-current="true" aria-label="Slide 1" ></button>
-                            <button className="bg-dark border rounded" type="button" data-bs-target="#relatedProductSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                            <button className="bg-dark border rounded" type="button" data-bs-target="#relatedProductSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                        </div>
-
-                        <div className="carousel-inner">
-                            <div className="carousel-item active">
-                                <div className="row mb-5">
-                                    {
-                                        Products.map((product) => <SingleProduct product={product} />)
-                                    }
-                                </div>
-                            </div>
-                            <div className="carousel-item mb-5">
-                                <div className="row">
-                                    {
-                                        Products.map((product) => <SingleProduct product={product} />)
-                                    }
-                                </div>
-                            </div>
-                            <div className="carousel-item mb-5">
-                                <div className="row">
-                                    {
-                                        Products.map((product) => <SingleProduct product={product} />)
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                        <button className="carousel-control-prev " type="button" data-bs-target="#relatedProductSlider" data-bs-slide="prev">
-                            <span className="carousel-control-prev-icon border rounded bg-dark " aria-hidden="true"></span>
-                            <span className="visually-hidden ">Previous</span>
-                        </button>
-                        <button className="carousel-control-next " type="button" data-bs-target="#relatedProductSlider" data-bs-slide="next">
-                            <span className="carousel-control-next-icon border rounded bg-dark" aria-hidden="true"></span>
-                            <span className="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                </div>
+                {/*   */}
                 {/* End related Products */}
             </section>
         </>

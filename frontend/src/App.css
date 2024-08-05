@@ -7,3 +7,21 @@
     text-align: center;
     align-items: center;
 }
+
+.carousel-control-prev, 
+.carousel-control-next {
+    color: black; /* Sets the text color (including icon) */
+    border-radius: 20%;
+}
+
+.carousel-control-prev-icon, 
+.carousel-control-next-icon {
+    background-color: black; /* Sets the background color of the icon */
+    border-radius: 20%;
+}
+
+/* Optional: Change the color of the icon itself */
+.carousel-control-prev-icon::before, 
+.carousel-control-next-icon::before {
+    filter: invert(1); /* Inverts the color of the icon */
+}

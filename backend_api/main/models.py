@@ -23,8 +23,11 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory,on_delete=models.SET_NULL,null=True,related_name='category_product')
     vendor = models.ForeignKey(Vendor,on_delete=models.SET_NULL,null=True)
     title = models.CharField(max_length=200)
+    slug = models.CharField(max_length=200, unique= True, null=True)
     details = models.TextField(null=True)
     price = models.FloatField()
+    tags = models.TextField(null=True)
+    image = models.ImageField(upload_to='product_imgs/',null=True)
 
     def __str__(self):
         return self.title
@@ -33,7 +36,7 @@ class Product(models.Model):
 
 class Customer(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
-    mobile = models.PositiveBigIntegerField()
+    mobile = models.PositiveBigIntegerField(unique=True)
 
     def __str__(self):          # magic method
         return self.user.username
@@ -76,4 +79,13 @@ class ProductRating(models.Model):
 
     def __str__(self):
         return f'{self.rating} - {self.reviews}'
+
+
+# product Images
+class ProductImages(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_imgs')
+    image = models.ImageField(upload_to='product_imgs/', null=True)
+
+    def __str__(self):
+        return self.image.url
 

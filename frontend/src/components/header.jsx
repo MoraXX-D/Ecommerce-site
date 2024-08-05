@@ -2,9 +2,14 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Link } from 'react-router-dom'
+import { useContext } from 'react';
+import { UserContext,CartContext } from '../context'
 
 
 const Header = () => {
+
+  const userContext = useContext(UserContext);
+  const {cartData,setCartData}=useContext(CartContext)
   return (
     <nav className="navbar navbar-expand-lg  navbar-dark bg-dark px-4">
       <div className="container-fluid">
@@ -21,7 +26,7 @@ const Header = () => {
               <Link className="nav-link " aria-disabled="true" to="categories">Categories</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link " aria-disabled="true" to="checkout">My Cart(4)</Link>
+              <Link className="nav-link " aria-disabled="true" to="checkout">My Cart({cartData.length})</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link " aria-disabled="true" to="checkout">New Orders(9)</Link>
@@ -31,11 +36,19 @@ const Header = () => {
                 Account
               </Link>
               <ul className="dropdown-menu">
-                <li><Link className="dropdown-item" to="customer/dashboard">Dashboard</Link></li>
-                <li><Link className="dropdown-item" to="customer/login">Login</Link></li>
-                <li><Link className="dropdown-item" to="customer/register">Register</Link></li>
-                <li><hr className="dropdown-divider"/></li>
-                <li><Link className="dropdown-item" to="#">Log Out</Link></li>
+                {userContext != 'true' &&
+                  <>
+                  <li><Link className="dropdown-item" to="customer/login">Login</Link></li>
+                  <li><Link className="dropdown-item" to="customer/register">Register</Link></li>
+                  </>
+                  
+                }
+                {userContext == 'true' &&
+                  <>
+                    <li><Link className="dropdown-item" to="customer/dashboard">Dashboard</Link></li>
+                    <li><Link className="dropdown-item" to="/customer/logout">Log Out</Link></li>
+                  </>
+                }
               </ul>
             </li>
             <li className="nav-item dropdown">
@@ -46,7 +59,7 @@ const Header = () => {
                 <li><Link className="dropdown-item" to="/seller/dashboard">Dashboard</Link></li>
                 <li><Link className="dropdown-item" to="/seller/login">Login</Link></li>
                 <li><Link className="dropdown-item" to="/seller/register">Register</Link></li>
-                <li><hr className="dropdown-divider"/></li>
+                <li><hr className="dropdown-divider" /></li>
                 <li><Link className="dropdown-item" to="#">Log Out</Link></li>
               </ul>
             </li>

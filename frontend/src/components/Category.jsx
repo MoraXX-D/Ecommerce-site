@@ -4,7 +4,7 @@ import xiao from '../assets/xiao.jpg'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from "react";
 
-const Categories = () => {
+const Categories = (props) => {
 
     const baseUrl = "http://127.0.0.1:8000/api"
     const [Categories, setCategories] = useState([]);
@@ -46,7 +46,7 @@ const Categories = () => {
     return (
         <div>
             {/*Popular categories */}
-            <h3 className="mb-5">Polular Categories <Link to="#" className="float-end btn  btn-secondary mt-2">View All Categories<i className="fa-solid fa-arrow-right-long"></i></Link> </h3>
+            <h3 className="mb-5">Popular Categories <Link to="#" className="float-end btn  btn-secondary mt-2">View All Categories<i className="fa-solid fa-arrow-right-long"></i></Link> </h3>
             <div className="row">
                 {
                     Categories.map((category) =>

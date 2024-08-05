@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const AllProducts = () => {
   const baseUrl = "http://127.0.0.1:8000/api";
-  const [products, setProducts] = useState([]); // Initialize with an empty array
+  const [products, setProducts] = useState([]); // Initialize state as an empty array
   const [totalResult, setTotalResult] = useState(0);
 
   const getData = async (url = baseUrl + '/products') => {
@@ -14,32 +14,33 @@ const AllProducts = () => {
         throw new Error(`Response status: ${response.status}`);
       }
       const json = await response.json();
-      setProducts(json.results); // Use 'json.results' to correctly fetch paginated data
-      setTotalResult(json.count); // Correctly set the total number of results
+      setProducts(json.results || []); // Adjust based on actual API response structure
+      setTotalResult(json.count || 0); // Ensure totalResult is set correctly
     } catch (error) {
-      console.error(error.message);
+      console.error("Failed to fetch products:", error.message);
     }
   };
 
-  // Fetch data once when the component mounts
+  // Fetch data when the component mounts
   useEffect(() => {
     getData();
   }, []); // Empty dependency array ensures this effect runs only once after the initial render
 
   const changeUrl = (url) => {
-    getData(url); // Correctly use the URL passed to the function
+    getData(url); // Fetch data with new URL
   };
 
+  // Calculate the number of pages needed for pagination
+  const itemsPerPage = 1; // Assuming 1 item per page
+  const totalPages = Math.ceil(totalResult / itemsPerPage);
+  
   let links = [];
-  const itemsPerPage = 1; // Match the backend pagination setup
-  const totalPages = Math.ceil(totalResult / itemsPerPage); // Calculate total pages
-
   for (let i = 1; i <= totalPages; i++) {
     links.push(
       <li key={i} className="page-item">
         <Link
           className="page-link"
-          onClick={() => changeUrl(baseUrl + `/products/?page=${i}`)}
+          onClick={() => changeUrl(`${baseUrl}/products/?page=${i}`)}
           to={`/products/?page=${i}`}
         >
           {i}
@@ -49,20 +50,24 @@ const AllProducts = () => {
   }
 
   return (
-    <div>
-      {/*Latest Product*/}
-      <h3 className="mb-4 mt-4">All Products</h3>
+    <>
+      <div>
+        {/*Latest Product*/}
+        <h3 className="mb-4 mt-4">All Products</h3>
 
-      <div className="row mb-4">
-        {products.map((product) => (
-          <SingleProduct key={product.id} product={product} />
-        ))}
+        <div className="row mb-4">
+          {products.map((product) => (
+            <SingleProduct key={product.id} product={product} />
+          ))}
+        </div>
+
+        <nav aria-label="...">
+          <ul className="pagination pagination-lg">
+            {links}
+          </ul>
+        </nav>
       </div>
-
-      <nav aria-label="...">
-        <ul className="pagination pagination-lg">{links}</ul>
-      </nav>
-    </div>
+    </>
   );
 };
 
